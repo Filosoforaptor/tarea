@@ -3,10 +3,6 @@ using UnityEngine;
 public class PlayerModel : MonoBehaviour
 {
     [SerializeField]
-    private int maxHealth = 3;
-    private int currentHealth;
-
-    [SerializeField]
     private Quaternion initTiltRotation;
 
     [SerializeField]
@@ -22,13 +18,7 @@ public class PlayerModel : MonoBehaviour
     public float TiltSpeed { get => tiltSpeed; private set => tiltSpeed = value; }
 
     public event Action<int> OnCoinsChanged;
-    public event Action<int, int> OnHealthChanged; // currentHealth, maxHealth
-    public event Action OnPlayerDied;
 
-    void Awake()
-    {
-        currentHealth = maxHealth;
-    }
   
     public Vector3 CalculateMove(Vector3 direction)
     {
@@ -49,23 +39,5 @@ public class PlayerModel : MonoBehaviour
         CurrentCoins++;
         print("add coin model");
         OnCoinsChanged?.Invoke(CurrentCoins);
-    }
-
-    public void TakeDamage(int amount)
-    {
-        if (currentHealth <= 0) return; // Already dead
-
-        currentHealth -= amount;
-        if (currentHealth < 0)
-        {
-            currentHealth = 0;
-        }
-
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-
-        if (currentHealth <= 0)
-        {
-            OnPlayerDied?.Invoke();
-        }
     }
 }
